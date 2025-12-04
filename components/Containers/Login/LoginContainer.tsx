@@ -1,6 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useState,
+  useRef,
+  type FormEvent,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type ClipboardEvent,
+} from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -15,7 +22,7 @@ import {
   loginReset,
   fetchLoginUserSuccess,
 } from "@/store/authSlice";
-import { loginAPI, getLoginUser } from "@/src/redux/auth/api";
+import { loginAPI, getLoginUser, otpVerificationAPI } from "@/src/redux/auth/api";
 import type { AppDispatch, RootState } from "@/store/store";
 import { ERRORS } from "@/lib/constants";
 import { loginSchema } from "@/src/libs/validators";
@@ -26,6 +33,8 @@ interface LoginFormData {
   email: string;
   password: string;
 }
+
+const DIGIT_COUNT = 6;
 
 export function LoginContainer() {
   const router = useRouter();
@@ -40,6 +49,16 @@ export function LoginContainer() {
   useLoginStatus();
 
   const [showPassword, setShowPassword] = useState(false);
+
+  // Local OTP flow state (mirroring behaviour from OtpContainer / svastha)
+  const [isVerificationPage, setIsVerificationPage] = useState(false);
+  const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(""));
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [otpSubmitted, setOtpSubmitted] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [isOtpLoading, setIsOtpLoading] = useState(false);
+  const [otpReference, setOtpReference] = useState<string | null>(null);
 
   // Setup react-hook-form with yup validation (matching svastha pattern)
   const {
@@ -78,15 +97,13 @@ export function LoginContainer() {
       // Store login response in Redux (matching svastha pattern)
       dispatch(loginSuccess(loginResponse));
 
-      // If backend indicates OTP flow, redirect to OTP page like svastha.
+      // If backend indicates OTP flow, switch to inline OTP screen (svastha-style)
       if (loginResponse.otpReference) {
-        const search = new URLSearchParams({
-          otpReference: String(loginResponse.otpReference),
-        });
-        if (loginResponse.user?.id) {
-          search.set("userId", String(loginResponse.user.id));
-        }
-        router.push(`/otp?${search.toString()}`);
+        setIsVerificationPage(true);
+        setOtpReference(String(loginResponse.otpReference));
+        setDigits(Array(DIGIT_COUNT).fill(""));
+        setOtpError(null);
+        setOtpSubmitted(false);
         return;
       }
 
@@ -124,6 +141,159 @@ export function LoginContainer() {
 
   const isSubmitDisabled = isSubmitting || login.isLoading;
 
+  // OTP handlers (lifted from OtpContainer so flow is inline here)
+  const handleDigitChange =
+    (index: number) =>
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value.replace(/\D/g, "").slice(-1);
+
+      setDigits((prev) => {
+        const next = [...prev];
+        next[index] = value;
+        return next;
+      });
+
+      if (value && index < DIGIT_COUNT - 1) {
+        inputRefs.current[index + 1]?.focus();
+      }
+
+      if (otpError) {
+        setOtpError(null);
+      }
+      if (otpSubmitted) {
+        setOtpSubmitted(false);
+      }
+    };
+
+  const handleKeyDown =
+    (index: number) =>
+    (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Backspace") {
+        if (digits[index]) {
+          setDigits((prev) => {
+            const next = [...prev];
+            next[index] = "";
+            return next;
+          });
+        } else if (index > 0) {
+          inputRefs.current[index - 1]?.focus();
+        }
+      }
+
+      if (event.key === "ArrowLeft" && index > 0) {
+        inputRefs.current[index - 1]?.focus();
+      }
+
+      if (event.key === "ArrowRight" && index < DIGIT_COUNT - 1) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    };
+
+  const handlePaste = (event: ClipboardEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const text = event.clipboardData.getData("text").replace(/\D/g, "");
+    if (!text) {
+      return;
+    }
+
+    const nextDigits = Array(DIGIT_COUNT)
+      .fill("")
+      .map((_, idx) => text[idx] ?? "");
+    setDigits(nextDigits);
+
+    const filledCount = nextDigits.findIndex((digit) => digit === "");
+    const focusIndex = filledCount === -1 ? DIGIT_COUNT - 1 : filledCount;
+    inputRefs.current[focusIndex]?.focus();
+
+    if (otpError) {
+      setOtpError(null);
+    }
+    if (otpSubmitted) {
+      setOtpSubmitted(false);
+    }
+  };
+
+  const handleOtpSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const otp = digits.join("");
+    if (!/^\d{6}$/.test(otp)) {
+      setOtpError("Please enter the 6-digit one-time passcode.");
+      setOtpSubmitted(false);
+      setIsOtpLoading(false);
+      return;
+    }
+
+    if (!otpReference) {
+      setOtpError("Missing verification reference. Please start sign in again.");
+      setOtpSubmitted(false);
+      setIsOtpLoading(false);
+      return;
+    }
+
+    setIsOtpLoading(true);
+    try {
+      if (!executeRecaptcha) {
+        toast.error(ERRORS.recaptcha.notAvailabale);
+        setOtpError(ERRORS.recaptcha.notAvailabale);
+        setOtpSubmitted(false);
+        setIsOtpLoading(false);
+        return;
+      }
+
+      const gReCaptchaToken = await executeRecaptcha("LoginOTPFormSubmit");
+
+      const res = await otpVerificationAPI({
+        otp: Number(otp),
+        otpReference,
+        isOtpExtension: false,
+        gReCaptchaToken,
+      });
+
+      if (res && res.user && res.session?.accessToken) {
+        // Mirror svastha: hydrate login user and dispatch to Redux
+        try {
+          const loginUserData = await getLoginUser({
+            Authorization: `Bearer ${res.session.accessToken}`,
+            org: res.user.orgId,
+          });
+
+          dispatch(
+            fetchLoginUserSuccess({
+              ...loginUserData,
+              rememberMe,
+            })
+          );
+        } catch {
+          // ignore and continue to dashboard
+        }
+
+        setOtpError(null);
+        setOtpSubmitted(true);
+        setIsOtpLoading(false);
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 800);
+        return;
+      }
+
+      setOtpSubmitted(false);
+      setIsOtpLoading(false);
+      setOtpError(ERRORS.auth.verificationCode);
+      toast.error(ERRORS.auth.verificationCode);
+    } catch (err: any) {
+      setOtpSubmitted(false);
+      setIsOtpLoading(false);
+      const message = err?.message ?? ERRORS.auth.verificationCode;
+      setOtpError(message);
+      toast.error(message);
+    }
+  };
+
+  const isOtpSubmitDisabled =
+    digits.some((digit) => digit.trim().length === 0) || isOtpLoading;
+
   return (
     <LoginScene
       control={control}
@@ -135,7 +305,19 @@ export function LoginContainer() {
       onSubmit={handleFormSubmit(onSubmit)}
       setIsShowPassword={setShowPassword}
       formErrors={errors}
+      isVerificationPage={isVerificationPage}
+      digits={digits}
+      otpError={otpError}
+      otpSubmitted={otpSubmitted}
+      rememberMe={rememberMe}
+      isOtpLoading={isOtpLoading}
+      isOtpSubmitDisabled={isOtpSubmitDisabled}
+      handleDigitChange={handleDigitChange}
+      handleKeyDown={handleKeyDown}
+      handlePaste={handlePaste}
+      handleOtpSubmit={handleOtpSubmit}
+      setRememberMe={setRememberMe}
+      inputRefs={inputRefs}
     />
   );
 }
-
