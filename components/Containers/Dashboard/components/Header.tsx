@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { useCookies } from "react-cookie";
 
 import { useDashboard } from "../context/DashboardContext";
-import type { AppDispatch } from "@/store/store";
-import { loginReset, fetchLoginUserReset } from "@/store/authSlice";
+import type { AppDispatch } from "@/src/redux/store";
+import { loginReset, fetchLoginUserReset } from "@/src/redux/slices/auth";
 
 const sectionTitles: Record<string, string> = {
   overview: "Dashboard",

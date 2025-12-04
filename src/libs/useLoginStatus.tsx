@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store/store";
+import type { RootState } from "@/src/redux/store";
 
 const useLoginStatus = () => {
   const [isLogin, setIsLogin] = useState(false);

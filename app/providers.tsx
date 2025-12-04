@@ -6,7 +6,7 @@ import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { ReduxProvider } from "@/store/ReduxProvider";
+import { ReduxProvider } from "@/src/redux/ReduxProvider";
 
 interface AppProvidersProps {
   children: ReactNode;

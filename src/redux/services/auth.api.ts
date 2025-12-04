@@ -1,13 +1,13 @@
 import { fetch } from "../../libs/helpers";
-import {
+import type {
   LoginPayload,
   LoginSuccessResponse,
   ForgotPasswordPayload,
   ResetPasswordPayload,
   OtpPayload,
-} from "./data.interfaces";
+} from "../slices/auth";
 
-// Auth API functions matching svastha pattern exactly
+// Auth API functions (moved from `src/redux/auth/api.tsx`)
 
 export const loginAPI = async (
   payload: LoginPayload
@@ -56,7 +56,7 @@ export const logoutAPI = async ({
 };
 
 export const forgotPasswordAPI = async (
-  payload: ForgotPasswordPayload = {}
+  payload: ForgotPasswordPayload 
 ): Promise<any> => {
   return fetch("/auth/forgotPassword", {
     method: "POST",
@@ -65,7 +65,7 @@ export const forgotPasswordAPI = async (
 };
 
 export const resetPasswordAPI = async (
-  payload: ResetPasswordPayload = {}
+  payload: ResetPasswordPayload
 ): Promise<any> => {
   return fetch("/auth/resetPassword", {
     method: "POST",
@@ -186,4 +186,5 @@ export const resetDefaultLoginPreferenceAPI = async (): Promise<any> => {
     method: "PUT",
   });
 };
+
 

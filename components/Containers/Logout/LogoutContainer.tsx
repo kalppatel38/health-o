@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 
-import { logoutAPI } from "@/src/redux/auth/api";
+import { logoutAPI } from "@/src/redux/services/auth.api";
 
 export function LogoutContainer() {
   const router = useRouter();

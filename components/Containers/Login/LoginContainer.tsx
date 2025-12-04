@@ -21,9 +21,13 @@ import {
   loginFail,
   loginReset,
   fetchLoginUserSuccess,
-} from "@/store/authSlice";
-import { loginAPI, getLoginUser, otpVerificationAPI } from "@/src/redux/auth/api";
-import type { AppDispatch, RootState } from "@/store/store";
+} from "@/src/redux/slices/auth";
+import {
+  loginAPI,
+  getLoginUser,
+  otpVerificationAPI,
+} from "@/src/redux/services/auth.api";
+import type { AppDispatch, RootState } from "@/src/redux/store";
 import { ERRORS } from "@/lib/constants";
 import { loginSchema } from "@/src/libs/validators";
 import useLoginStatus from "@/src/libs/useLoginStatus";
