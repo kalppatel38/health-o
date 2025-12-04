@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type {
   LoginSuccessResponse,
   LoginUserSuccessResponse,
-} from "@/src/redux/auth/data.interfaces";
+} from "@/src/redux/auth/api";
 
 // Auth state matching svastha's pattern exactly
 export interface AuthState {
