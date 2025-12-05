@@ -29,7 +29,7 @@ interface ResetPasswordSceneProps {
   token: string | null;
 }
 
-export function ResetPasswordScene(props: ResetPasswordSceneProps) {
+const ResetPasswordScene = (props: ResetPasswordSceneProps) => {
   const { form, submitted, error, isSubmitDisabled, handleChange, handleSubmit, token } =
     props;
   const router = useRouter();
@@ -104,5 +104,7 @@ export function ResetPasswordScene(props: ResetPasswordSceneProps) {
       </CardFooter>
     </Card>
   );
-}
+};
+
+export { ResetPasswordScene };
 

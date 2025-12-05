@@ -19,7 +19,7 @@ const sectionTitles: Record<string, string> = {
   "live-pouch-status": "Live Pouch Status",
   "pouch-history": "Pouch History",
 };
-export function DashboardHeader() {
+const DashboardHeader = () => {
   const { sidebarOpen, setSidebarOpen, activeSection } = useDashboard();
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -97,6 +97,8 @@ export function DashboardHeader() {
       </div>
     </header>
   );
-}
+};
+
+export { DashboardHeader };
 
 

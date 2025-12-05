@@ -18,7 +18,7 @@ interface PouchHistorySceneProps {
   pouchReports: Report[];
 }
 
-export function PouchHistoryScene(props: PouchHistorySceneProps) {
+const PouchHistoryScene = (props: PouchHistorySceneProps) => {
   const { selectedReportId, setSelectedReportId, pouchReports } = props;
   const selectedReport = pouchReports.find((r) => r.id === selectedReportId);
 
@@ -242,6 +242,8 @@ export function PouchHistoryScene(props: PouchHistorySceneProps) {
       </div>
     </div>
   );
-}
+};
+
+export { PouchHistoryScene };
 
 

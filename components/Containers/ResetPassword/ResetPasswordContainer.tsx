@@ -6,11 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 
-import { resetPasswordAPI } from "@/src/redux/services/auth.api";
+import authAPI from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/lib/constants";
 import { ResetPasswordScene } from "./ResetPasswordScene";
 
-export function ResetPasswordContainer() {
+const ResetPasswordContainer = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -53,7 +53,7 @@ export function ResetPasswordContainer() {
 
       const gReCaptchaToken = await executeRecaptcha("ForgotPasswordFormSubmit");
 
-      await resetPasswordAPI({
+      await authAPI.resetPasswordAPI({
         newPassword: form.password,
         confirmPassword: form.password,
         invitationToken: token,
@@ -101,5 +101,7 @@ export function ResetPasswordContainer() {
       token={token}
     />
   );
-}
+};
+
+export { ResetPasswordContainer };
 

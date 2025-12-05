@@ -50,7 +50,7 @@ export interface InputFieldProps<T extends FieldValues> {
   defaultValue?: string;
 }
 
-export function InputField<T extends FieldValues>({
+export const InputField = <T extends FieldValues>({
   name,
   control,
   label,
@@ -67,7 +67,7 @@ export function InputField<T extends FieldValues>({
   disabled,
   showError = true,
   defaultValue,
-}: InputFieldProps<T>) {
+}: InputFieldProps<T>) => {
   return (
     <Controller
       name={name}
@@ -101,10 +101,10 @@ export function InputField<T extends FieldValues>({
       )}
     />
   );
-}
+};
 
 // Input field without label (matching svastha's InputFieldOnly)
-export function InputFieldOnly<T extends FieldValues>({
+export const InputFieldOnly = <T extends FieldValues>({
   name,
   control,
   label,
@@ -121,7 +121,7 @@ export function InputFieldOnly<T extends FieldValues>({
   disabled,
   showError = true,
   defaultValue,
-}: InputFieldProps<T>) {
+}: InputFieldProps<T>) => {
   return (
     <InputField
       name={name}
@@ -142,7 +142,7 @@ export function InputFieldOnly<T extends FieldValues>({
       defaultValue={defaultValue}
     />
   );
-}
+};
 
 // Password field with show/hide toggle
 export interface PasswordFieldProps<T extends FieldValues> {
@@ -158,7 +158,7 @@ export interface PasswordFieldProps<T extends FieldValues> {
   onTogglePassword?: () => void;
 }
 
-export function PasswordField<T extends FieldValues>({
+export const PasswordField = <T extends FieldValues>({
   name,
   control,
   label,
@@ -169,7 +169,7 @@ export function PasswordField<T extends FieldValues>({
   showError = true,
   showPassword = false,
   onTogglePassword,
-}: PasswordFieldProps<T>) {
+}: PasswordFieldProps<T>) => {
   return (
     <Controller
       name={name}
@@ -212,5 +212,5 @@ export function PasswordField<T extends FieldValues>({
       )}
     />
   );
-}
+};
 

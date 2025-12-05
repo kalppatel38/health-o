@@ -8,7 +8,7 @@ import {
 } from "../../data/dashboard-overview";
 import { OverviewScene } from "./OverviewScene";
 
-export function OverviewContainer() {
+const OverviewContainer = () => {
   return (
     <OverviewScene
       activityItems={activityItems}
@@ -17,5 +17,7 @@ export function OverviewContainer() {
       lowStockItems={lowStockItems}
     />
   );
-}
+};
+
+export { OverviewContainer };
 

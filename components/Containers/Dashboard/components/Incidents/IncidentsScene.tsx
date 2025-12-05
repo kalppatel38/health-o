@@ -29,7 +29,7 @@ interface IncidentsSceneProps {
   incidents: Array<any>;
 }
 
-export function IncidentsScene(props: IncidentsSceneProps) {
+const IncidentsScene = (props: IncidentsSceneProps) => {
   const {
     showReportIncident,
     policeNotified,
@@ -379,6 +379,8 @@ export function IncidentsScene(props: IncidentsSceneProps) {
       ) : null}
     </div>
   );
-}
+};
+
+export { IncidentsScene };
 
 

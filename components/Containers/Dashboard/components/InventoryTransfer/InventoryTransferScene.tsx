@@ -22,7 +22,7 @@ interface InventoryTransferSceneProps {
   transferStatusConfig: Record<string, { label: string; badgeClasses: string; textClasses: string }>;
 }
 
-export function InventoryTransferScene(props: InventoryTransferSceneProps) {
+const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
   const { locations, recentTransfers, transferStatusConfig } = props;
 
   return (
@@ -143,5 +143,7 @@ export function InventoryTransferScene(props: InventoryTransferSceneProps) {
       </Card>
     </div>
   );
-}
+};
+
+export { InventoryTransferScene };
 

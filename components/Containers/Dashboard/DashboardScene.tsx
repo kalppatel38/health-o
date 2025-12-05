@@ -6,7 +6,9 @@ interface DashboardSceneProps {
   children: ReactNode;
 }
 
-export function DashboardScene(props: DashboardSceneProps) {
+const DashboardScene = (props: DashboardSceneProps) => {
   const { children } = props;
   return <div>{children}</div>;
-}
+};
+
+export { DashboardScene };

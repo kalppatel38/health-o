@@ -13,7 +13,7 @@ import { LivePouchStatusContainer } from "./components/LivePouchStatus/LivePouch
 import { PouchHistoryContainer } from "./components/PouchHistory/PouchHistoryContainer";
 import type { DashboardSectionId } from "./context/DashboardContext";
 
-export function DashboardContainer() {
+const DashboardContainer = () => {
   const { activeSection } = useDashboard();
 
   const renderContent = useMemo(() => {
@@ -32,4 +32,6 @@ export function DashboardContainer() {
   }, [activeSection]);
 
   return <DashboardScene>{renderContent}</DashboardScene>;
-}
+};
+
+export { DashboardContainer };

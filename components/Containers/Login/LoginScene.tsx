@@ -62,7 +62,7 @@ interface LoginSceneProps {
   inputRefs: React.MutableRefObject<Array<HTMLInputElement | null>>;
 }
 
-export function LoginScene(props: LoginSceneProps) {
+const LoginScene = (props: LoginSceneProps) => {
   const {
     control,
     showPassword,
@@ -229,4 +229,6 @@ export function LoginScene(props: LoginSceneProps) {
       )}
     </Card>
   );
-}
+};
+
+export { LoginScene };

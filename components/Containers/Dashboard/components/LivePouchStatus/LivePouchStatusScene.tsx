@@ -15,7 +15,7 @@ interface LivePouchStatusSceneProps {
   pouches: Pouch[];
 }
 
-export function LivePouchStatusScene(props: LivePouchStatusSceneProps) {
+const LivePouchStatusScene = (props: LivePouchStatusSceneProps) => {
   const { pouchStats, pouches } = props;
   return (
     <div className="space-y-6">
@@ -232,6 +232,8 @@ export function LivePouchStatusScene(props: LivePouchStatusSceneProps) {
       </Card>
     </div>
   );
-}
+};
+
+export { LivePouchStatusScene };
 
 

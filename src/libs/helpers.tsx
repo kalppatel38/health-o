@@ -52,7 +52,7 @@ const generateQueryString = (queryObject: any) => {
   return queryString;
 };
 
-export const fetch: (url: string, options?: FetchOptionsProps) => any = async (
+const fetch: (url: string, options?: FetchOptionsProps) => any = async (
   url,
   options = {}
 ) => {
@@ -179,5 +179,5 @@ export const fetch: (url: string, options?: FetchOptionsProps) => any = async (
   }
 };
 
-export { API };
+export { API, fetch };
 

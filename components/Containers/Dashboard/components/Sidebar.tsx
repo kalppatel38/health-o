@@ -60,7 +60,7 @@ const navItems: { id: DashboardSectionId; label: string; icon: any }[] = [
   },
 ];
 
-export function DashboardSidebar() {
+const DashboardSidebar = () => {
   const { activeSection, setActiveSection, sidebarOpen, setSidebarOpen } =
     useDashboard();
 
@@ -137,6 +137,8 @@ export function DashboardSidebar() {
       ) : null}
     </>
   );
-}
+};
+
+export { DashboardSidebar };
 
 

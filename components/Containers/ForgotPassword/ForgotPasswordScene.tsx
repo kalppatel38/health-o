@@ -25,7 +25,7 @@ interface ForgotPasswordSceneProps {
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export function ForgotPasswordScene(props: ForgotPasswordSceneProps) {
+const ForgotPasswordScene = (props: ForgotPasswordSceneProps) => {
   const { email, submitted, error, isSubmitDisabled, handleChange, handleSubmit } = props;
   const router = useRouter();
 
@@ -84,5 +84,7 @@ export function ForgotPasswordScene(props: ForgotPasswordSceneProps) {
       </CardFooter>
     </Card>
   );
-}
+};
+
+export { ForgotPasswordScene };
 

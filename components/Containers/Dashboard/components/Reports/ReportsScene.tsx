@@ -40,7 +40,7 @@ interface ReportsSceneProps {
   setEndDate: (date: string) => void;
 }
 
-export function ReportsScene(props: ReportsSceneProps) {
+const ReportsScene = (props: ReportsSceneProps) => {
   const {
     activeTab,
     setActiveTab,
@@ -567,5 +567,7 @@ export function ReportsScene(props: ReportsSceneProps) {
       </Card>
     </div>
   );
-}
+};
+
+export { ReportsScene };
 

@@ -29,7 +29,7 @@ interface OverviewSceneProps {
   lowStockItems: LowStockItem[];
 }
 
-export function OverviewScene(props: OverviewSceneProps) {
+const OverviewScene = (props: OverviewSceneProps) => {
   const { activityItems, depotSections, headquartersInventoryItems, lowStockItems } = props;
 
   return (
@@ -204,7 +204,7 @@ interface InventoryPillCardProps {
   status?: InventoryStatus;
 }
 
-function InventoryPillCard({
+const InventoryPillCard = ({
   name,
   current,
   min,
@@ -212,7 +212,7 @@ function InventoryPillCard({
   lot,
   expiry,
   status = "ok",
-}: InventoryPillCardProps) {
+}: InventoryPillCardProps) => {
   const isLow = status === "low" || current < min;
   const borderColor = isLow ? "border-red-200 bg-red-50" : "border-green-200 bg-green-50";
   const valueColor = isLow ? "text-red-600" : "text-green-600";
@@ -265,7 +265,7 @@ interface DepotSectionProps {
   items: DepotItem[];
 }
 
-function DepotSection({ title, code, items }: DepotSectionProps) {
+const DepotSection = ({ title, code, items }: DepotSectionProps) => {
   return (
     <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-center mb-3">
@@ -298,7 +298,7 @@ interface LowStockRowProps {
   min: number;
 }
 
-function LowStockRow({ name, location, current, min }: LowStockRowProps) {
+const LowStockRow = ({ name, location, current, min }: LowStockRowProps) => {
   return (
     <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
       <div>
@@ -322,7 +322,7 @@ interface ActivityRowProps {
   ago: string;
 }
 
-function ActivityRow({ color, title, description, ago }: ActivityRowProps) {
+const ActivityRow = ({ color, title, description, ago }: ActivityRowProps) => {
   const bgColor =
     color === "blue"
       ? "bg-blue-50"
@@ -346,5 +346,7 @@ function ActivityRow({ color, title, description, ago }: ActivityRowProps) {
       <span className="text-xs text-gray-500">{ago}</span>
     </div>
   );
-}
+};
+
+export { OverviewScene };
 

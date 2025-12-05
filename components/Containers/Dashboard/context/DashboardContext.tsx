@@ -30,7 +30,7 @@ const DashboardContext = createContext<DashboardContextValue | undefined>(
   undefined
 );
 
-export function DashboardProvider({ children }: { children: ReactNode }) {
+const DashboardProvider = ({ children }: { children: ReactNode }) => {
   const [activeSection, setActiveSection] =
     useState<DashboardSectionId>("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -42,14 +42,16 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       {children}
     </DashboardContext.Provider>
   );
-}
+};
 
-export function useDashboard() {
+const useDashboard = () => {
   const ctx = useContext(DashboardContext);
   if (!ctx) {
     throw new Error("useDashboard must be used within a DashboardProvider");
   }
   return ctx;
-}
+};
+
+export { DashboardProvider, useDashboard };
 
 

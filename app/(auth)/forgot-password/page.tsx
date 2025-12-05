@@ -1,7 +1,9 @@
 import { ForgotPasswordContainer } from "@/components/Containers/ForgotPassword/ForgotPasswordContainer";
 
-export default function ForgotPasswordPage() {
+const ForgotPasswordPage = () => {
   return <ForgotPasswordContainer />;
-}
+};
+
+export default ForgotPasswordPage;
 
 

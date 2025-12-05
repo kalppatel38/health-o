@@ -5,11 +5,11 @@ import type { FormEvent, ChangeEvent } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 
-import { forgotPasswordAPI } from "@/src/redux/services/auth.api";
+import authAPI from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/lib/constants";
 import { ForgotPasswordScene } from "./ForgotPasswordScene";
 
-export function ForgotPasswordContainer() {
+const ForgotPasswordContainer = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -28,7 +28,7 @@ export function ForgotPasswordContainer() {
 
       const gReCaptchaToken = await executeRecaptcha("ForgotPasswordFormSubmit");
 
-      await forgotPasswordAPI({ email, gReCaptchaToken });
+      await authAPI.forgotPasswordAPI({ email, gReCaptchaToken });
       setError(null);
       setSubmitted(true);
       toast.success(
@@ -62,5 +62,7 @@ export function ForgotPasswordContainer() {
       handleSubmit={handleSubmit}
     />
   );
-}
+};
+
+export { ForgotPasswordContainer };
 

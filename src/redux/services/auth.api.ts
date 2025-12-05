@@ -9,7 +9,7 @@ import type {
 
 // Auth API functions (moved from `src/redux/auth/api.tsx`)
 
-export const loginAPI = async (
+const loginAPI = async (
   payload: LoginPayload
 ): Promise<LoginSuccessResponse> => {
   return fetch("/auth/login", {
@@ -18,7 +18,7 @@ export const loginAPI = async (
   });
 };
 
-export const getLoginUser = async ({
+const getLoginUser = async ({
   Authorization,
   org,
   customer,
@@ -44,7 +44,7 @@ export const getLoginUser = async ({
   });
 };
 
-export const logoutAPI = async ({
+const logoutAPI = async ({
   sessionId,
 }: {
   sessionId: string;
@@ -55,7 +55,7 @@ export const logoutAPI = async ({
   });
 };
 
-export const forgotPasswordAPI = async (
+const forgotPasswordAPI = async (
   payload: ForgotPasswordPayload 
 ): Promise<any> => {
   return fetch("/auth/forgotPassword", {
@@ -64,7 +64,7 @@ export const forgotPasswordAPI = async (
   });
 };
 
-export const resetPasswordAPI = async (
+const resetPasswordAPI = async (
   payload: ResetPasswordPayload
 ): Promise<any> => {
   return fetch("/auth/resetPassword", {
@@ -73,7 +73,7 @@ export const resetPasswordAPI = async (
   });
 };
 
-export const verifyInvitationTokenAPI = async (
+const verifyInvitationTokenAPI = async (
   payload: any = {}
 ): Promise<any> => {
   return fetch("/user/verify-invitation-token", {
@@ -82,7 +82,7 @@ export const verifyInvitationTokenAPI = async (
   });
 };
 
-export const changePasswordAPI = async ({
+const changePasswordAPI = async ({
   payload,
 }: {
   payload: any;
@@ -93,7 +93,7 @@ export const changePasswordAPI = async ({
   });
 };
 
-export const updateUserAPI = async ({
+const updateUserAPI = async ({
   payload,
 }: {
   payload: any;
@@ -104,7 +104,7 @@ export const updateUserAPI = async ({
   });
 };
 
-export const defaultCustomerAPI = async ({
+const defaultCustomerAPI = async ({
   customerId,
   payload,
 }: {
@@ -117,7 +117,7 @@ export const defaultCustomerAPI = async ({
   });
 };
 
-export const updateUserSettingsAPI = async ({
+const updateUserSettingsAPI = async ({
   payload,
 }: {
   payload: any;
@@ -128,63 +128,85 @@ export const updateUserSettingsAPI = async ({
   });
 };
 
-export const otpVerificationAPI = async (payload: OtpPayload): Promise<any> => {
+const otpVerificationAPI = async (payload: OtpPayload): Promise<any> => {
   return fetch("/auth/verifyOtp", {
     method: "POST",
     body: payload,
   });
 };
 
-export const resendOtpAPI = async (payload: any): Promise<any> => {
+const resendOtpAPI = async (payload: any): Promise<any> => {
   return fetch("/auth/resendOtp", {
     method: "POST",
     body: payload,
   });
 };
 
-export const lockUserAPI = async (): Promise<any> => {
+const lockUserAPI = async (): Promise<any> => {
   return fetch("/auth/lockUser", {
     method: "GET",
   });
 };
 
-export const unLockUserAPI = async (payload: any): Promise<any> => {
+const unLockUserAPI = async (payload: any): Promise<any> => {
   return fetch("/auth/unLockUser", {
     method: "POST",
     body: payload,
   });
 };
 
-export const twoFaEnableAPI = async (): Promise<any> => {
+const twoFaEnableAPI = async (): Promise<any> => {
   return fetch("/auth/2FA/enable", {
     method: "POST",
   });
 };
 
-export const twoFaDisableAPI = async (): Promise<any> => {
+const twoFaDisableAPI = async (): Promise<any> => {
   return fetch("/auth/2FA/disable", {
     method: "POST",
   });
 };
 
-export const twoFaSendCodeAPI = async (payload: any): Promise<any> => {
+const twoFaSendCodeAPI = async (payload: any): Promise<any> => {
   return fetch("/auth/2FA/sendCode", {
     method: "POST",
     body: payload,
   });
 };
 
-export const twoFaVerifyCodeAPI = async (payload: any): Promise<any> => {
+const twoFaVerifyCodeAPI = async (payload: any): Promise<any> => {
   return fetch("/auth/2FA/verifyCode", {
     method: "POST",
     body: payload,
   });
 };
 
-export const resetDefaultLoginPreferenceAPI = async (): Promise<any> => {
+const resetDefaultLoginPreferenceAPI = async (): Promise<any> => {
   return fetch("/auth/reset-default-login-preference", {
     method: "PUT",
   });
+};
+
+export default {
+  loginAPI,
+  getLoginUser,
+  logoutAPI,
+  forgotPasswordAPI,
+  resetPasswordAPI,
+  verifyInvitationTokenAPI,
+  changePasswordAPI,
+  updateUserAPI,
+  defaultCustomerAPI,
+  updateUserSettingsAPI,
+  otpVerificationAPI,
+  resendOtpAPI,
+  lockUserAPI,
+  unLockUserAPI,
+  twoFaEnableAPI,
+  twoFaDisableAPI,
+  twoFaSendCodeAPI,
+  twoFaVerifyCodeAPI,
+  resetDefaultLoginPreferenceAPI,
 };
 
 

@@ -1,7 +1,9 @@
 import { ResetPasswordContainer } from "@/components/Containers/ResetPassword/ResetPasswordContainer";
 
-export default function SetPasswordPage() {
+const SetPasswordPage = () => {
   return <ResetPasswordContainer />;
-}
+};
+
+export default SetPasswordPage;
 
 

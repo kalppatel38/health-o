@@ -7,7 +7,7 @@ import {
 } from "../../data/inventory-transfer";
 import { InventoryTransferScene } from "./InventoryTransferScene";
 
-export function InventoryTransferContainer() {
+const InventoryTransferContainer = () => {
   return (
     <InventoryTransferScene
       locations={LOCATIONS}
@@ -15,5 +15,7 @@ export function InventoryTransferContainer() {
       transferStatusConfig={TRANSFER_STATUS_CONFIG}
     />
   );
-}
+};
+
+export { InventoryTransferContainer };
 

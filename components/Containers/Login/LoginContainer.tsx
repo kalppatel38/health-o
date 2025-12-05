@@ -22,11 +22,7 @@ import {
   loginReset,
   fetchLoginUserSuccess,
 } from "@/src/redux/slices/auth";
-import {
-  loginAPI,
-  getLoginUser,
-  otpVerificationAPI,
-} from "@/src/redux/services/auth.api";
+import authAPI from "@/src/redux/services/auth.api";
 import type { AppDispatch, RootState } from "@/src/redux/store";
 import { ERRORS } from "@/lib/constants";
 import { loginSchema } from "@/src/libs/validators";
@@ -40,7 +36,7 @@ interface LoginFormData {
 
 const DIGIT_COUNT = 6;
 
-export function LoginContainer() {
+const LoginContainer = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const { login, loginUser } = useSelector((state: RootState) => state.auth);
@@ -92,7 +88,7 @@ export function LoginContainer() {
 
       const gReCaptchaToken = await executeRecaptcha("LoginFormSubmit");
 
-      const loginResponse = await loginAPI({
+      const loginResponse = await authAPI.loginAPI({
         email: data.email,
         password: data.password,
         gReCaptchaToken,
@@ -114,7 +110,7 @@ export function LoginContainer() {
       // Fetch full user data (whoAmI) like svastha does
       if (loginResponse.session?.accessToken && loginResponse.user?.orgId) {
         try {
-          const loginUserData = await getLoginUser({
+          const loginUserData = await authAPI.getLoginUser({
             Authorization: `Bearer ${loginResponse.session.accessToken}`,
             org: loginResponse.user.orgId,
           });
@@ -247,7 +243,7 @@ export function LoginContainer() {
 
       const gReCaptchaToken = await executeRecaptcha("LoginOTPFormSubmit");
 
-      const res = await otpVerificationAPI({
+      const res = await authAPI.otpVerificationAPI({
         otp: Number(otp),
         otpReference,
         isOtpExtension: false,
@@ -257,7 +253,7 @@ export function LoginContainer() {
       if (res && res.user && res.session?.accessToken) {
         // Mirror svastha: hydrate login user and dispatch to Redux
         try {
-          const loginUserData = await getLoginUser({
+          const loginUserData = await authAPI.getLoginUser({
             Authorization: `Bearer ${res.session.accessToken}`,
             org: res.user.orgId,
           });
@@ -324,4 +320,6 @@ export function LoginContainer() {
       inputRefs={inputRefs}
     />
   );
-}
+};
+
+export { LoginContainer };

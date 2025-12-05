@@ -9,7 +9,7 @@ import {
 } from "../../data/reports";
 import { ReportsScene } from "./ReportsScene";
 
-export function ReportsContainer() {
+const ReportsContainer = () => {
   const [activeTab, setActiveTab] = useState<ReportType>("medication");
   const [paramedicFilter, setParamedicFilter] = useState<
     "all" | "incident" | "usage"
@@ -35,5 +35,7 @@ export function ReportsContainer() {
       setEndDate={setEndDate}
     />
   );
-}
+};
+
+export { ReportsContainer };
 

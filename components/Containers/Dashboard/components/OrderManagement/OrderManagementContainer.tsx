@@ -12,7 +12,7 @@ import {
 } from "../../data/order-management";
 import { OrderManagementScene } from "./OrderManagementScene";
 
-export function OrderManagementContainer() {
+const OrderManagementContainer = () => {
   const [showNewOrder, setShowNewOrder] = useState(false);
   const [orderVersion, setOrderVersion] = useState<OrderVersion>("expiry");
 
@@ -30,5 +30,7 @@ export function OrderManagementContainer() {
       statusFlowSteps={STATUS_FLOW_STEPS}
     />
   );
-}
+};
+
+export { OrderManagementContainer };
 

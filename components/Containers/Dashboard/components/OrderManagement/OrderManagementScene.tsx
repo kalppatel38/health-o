@@ -29,7 +29,7 @@ interface OrderManagementSceneProps {
   statusFlowSteps: Array<{ label: string; icon: LucideIcon; circleClasses: string }>;
 }
 
-export function OrderManagementScene(props: OrderManagementSceneProps) {
+const OrderManagementScene = (props: OrderManagementSceneProps) => {
   const {
     showNewOrder,
     orderVersion,
@@ -392,6 +392,8 @@ export function OrderManagementScene(props: OrderManagementSceneProps) {
       ) : null}
     </div>
   );
-}
+};
+
+export { OrderManagementScene };
 
 

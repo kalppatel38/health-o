@@ -6,12 +6,14 @@ import {
 } from "../../data/live-pouch-status";
 import { LivePouchStatusScene } from "./LivePouchStatusScene";
 
-export function LivePouchStatusContainer() {
+const LivePouchStatusContainer = () => {
   return (
     <LivePouchStatusScene
       pouchStats={POUCH_STATS}
       pouches={POUCHES}
     />
   );
-}
+};
+
+export { LivePouchStatusContainer };
 

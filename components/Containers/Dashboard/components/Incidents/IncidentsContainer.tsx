@@ -7,7 +7,7 @@ import {
 } from "../../data/incidents";
 import { IncidentsScene } from "./IncidentsScene";
 
-export function IncidentsContainer() {
+const IncidentsContainer = () => {
   const [showReportIncident, setShowReportIncident] = useState(false);
   const [policeNotified, setPoliceNotified] = useState(false);
 
@@ -21,5 +21,7 @@ export function IncidentsContainer() {
       incidents={INCIDENTS}
     />
   );
-}
+};
+
+export { IncidentsContainer };
 

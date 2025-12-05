@@ -31,7 +31,7 @@ interface NotificationsCenterSceneProps {
   notificationSummary: NotificationSummary;
 }
 
-export function NotificationsCenterScene(props: NotificationsCenterSceneProps) {
+const NotificationsCenterScene = (props: NotificationsCenterSceneProps) => {
   const {
     activeFilter,
     notificationFilters,
@@ -170,12 +170,12 @@ interface SummaryCardProps {
   bgClasses?: string;
 }
 
-function SummaryCard({
+const SummaryCard = ({
   label,
   value,
   valueClasses,
   bgClasses,
-}: SummaryCardProps) {
+}: SummaryCardProps) => {
   return (
     <div
       className={`text-center p-4 rounded-lg ${
@@ -198,7 +198,7 @@ interface NotificationRowProps {
   item: NotificationItemType;
 }
 
-function NotificationRow({ item }: NotificationRowProps) {
+const NotificationRow = ({ item }: NotificationRowProps) => {
   const isInventoryAlert =
     item.category === "inventory" || item.category === "incidents";
   const isCritical = item.priority === "critical";
@@ -273,5 +273,7 @@ function NotificationRow({ item }: NotificationRowProps) {
       </div>
     </div>
   );
-}
+};
+
+export { NotificationsCenterScene };
 

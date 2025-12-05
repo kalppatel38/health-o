@@ -1,7 +1,9 @@
 import { LogoutContainer } from "@/components/Containers/Logout/LogoutContainer";
 
-export default function LogoutPage() {
+const LogoutPage = () => {
   return <LogoutContainer />;
-}
+};
+
+export default LogoutPage;
 
 

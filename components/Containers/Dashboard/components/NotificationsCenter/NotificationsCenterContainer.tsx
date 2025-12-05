@@ -10,7 +10,7 @@ import {
 } from "../../data/notifications";
 import { NotificationsCenterScene } from "./NotificationsCenterScene";
 
-export function NotificationsCenterContainer() {
+const NotificationsCenterContainer = () => {
   const [activeFilter] = useState<NotificationFilterKey>("all");
 
   return (
@@ -22,5 +22,7 @@ export function NotificationsCenterContainer() {
       notificationSummary={NOTIFICATION_SUMMARY}
     />
   );
-}
+};
+
+export { NotificationsCenterContainer };
 

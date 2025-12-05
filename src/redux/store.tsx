@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import reducers from "./reducers";
 
-export const makeStore = () =>
+const makeStore = () =>
   configureStore({
     reducer: reducers,
   });
@@ -9,5 +9,7 @@ export const makeStore = () =>
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppDispatch = AppStore["dispatch"];
 export type RootState = ReturnType<AppStore["getState"]>;
+
+export default makeStore;
 
 
