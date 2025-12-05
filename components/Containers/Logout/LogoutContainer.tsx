@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
 
-import authAPI from "@/src/redux/services/auth.api";
+import { logoutAPI } from "@/src/redux/services/auth.api";
 
 const LogoutContainer = () => {
   const router = useRouter();
@@ -18,7 +18,7 @@ const LogoutContainer = () => {
 
       try {
         if (sessionId) {
-          await authAPI.logoutAPI({ sessionId });
+          await logoutAPI({ sessionId });
         }
       } catch {
         // Ignore API failures and still clear client state

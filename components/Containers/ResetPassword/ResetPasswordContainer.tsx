@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 
-import authAPI from "@/src/redux/services/auth.api";
+import { resetPasswordAPI } from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/lib/constants";
 import { ResetPasswordScene } from "./ResetPasswordScene";
 
@@ -53,7 +53,7 @@ const ResetPasswordContainer = () => {
 
       const gReCaptchaToken = await executeRecaptcha("ForgotPasswordFormSubmit");
 
-      await authAPI.resetPasswordAPI({
+      await resetPasswordAPI({
         newPassword: form.password,
         confirmPassword: form.password,
         invitationToken: token,

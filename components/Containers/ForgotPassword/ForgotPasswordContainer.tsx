@@ -5,7 +5,7 @@ import type { FormEvent, ChangeEvent } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 
-import authAPI from "@/src/redux/services/auth.api";
+import { forgotPasswordAPI } from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/lib/constants";
 import { ForgotPasswordScene } from "./ForgotPasswordScene";
 
@@ -28,7 +28,7 @@ const ForgotPasswordContainer = () => {
 
       const gReCaptchaToken = await executeRecaptcha("ForgotPasswordFormSubmit");
 
-      await authAPI.forgotPasswordAPI({ email, gReCaptchaToken });
+      await forgotPasswordAPI({ email, gReCaptchaToken });
       setError(null);
       setSubmitted(true);
       toast.success(

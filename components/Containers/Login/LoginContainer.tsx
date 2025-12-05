@@ -22,7 +22,11 @@ import {
   loginReset,
   fetchLoginUserSuccess,
 } from "@/src/redux/slices/auth";
-import authAPI from "@/src/redux/services/auth.api";
+import {
+  loginAPI,
+  getLoginUser,
+  otpVerificationAPI,
+} from "@/src/redux/services/auth.api";
 import type { AppDispatch, RootState } from "@/src/redux/store";
 import { ERRORS } from "@/lib/constants";
 import { loginSchema } from "@/src/libs/validators";
@@ -88,7 +92,7 @@ const LoginContainer = () => {
 
       const gReCaptchaToken = await executeRecaptcha("LoginFormSubmit");
 
-      const loginResponse = await authAPI.loginAPI({
+      const loginResponse = await loginAPI({
         email: data.email,
         password: data.password,
         gReCaptchaToken,
@@ -110,7 +114,7 @@ const LoginContainer = () => {
       // Fetch full user data (whoAmI) like svastha does
       if (loginResponse.session?.accessToken && loginResponse.user?.orgId) {
         try {
-          const loginUserData = await authAPI.getLoginUser({
+          const loginUserData = await getLoginUser({
             Authorization: `Bearer ${loginResponse.session.accessToken}`,
             org: loginResponse.user.orgId,
           });
@@ -243,7 +247,7 @@ const LoginContainer = () => {
 
       const gReCaptchaToken = await executeRecaptcha("LoginOTPFormSubmit");
 
-      const res = await authAPI.otpVerificationAPI({
+      const res = await otpVerificationAPI({
         otp: Number(otp),
         otpReference,
         isOtpExtension: false,
@@ -253,7 +257,7 @@ const LoginContainer = () => {
       if (res && res.user && res.session?.accessToken) {
         // Mirror svastha: hydrate login user and dispatch to Redux
         try {
-          const loginUserData = await authAPI.getLoginUser({
+          const loginUserData = await getLoginUser({
             Authorization: `Bearer ${res.session.accessToken}`,
             org: res.user.orgId,
           });
