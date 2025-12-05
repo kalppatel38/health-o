@@ -10,7 +10,7 @@ import {
   THRESHOLD_SUMMARY_ROWS,
   type OrderVersion,
 } from "../../data/order-management";
-import { OrderManagementScene } from "./OrderManagementScene";
+import OrderManagementScene from "./OrderManagementScene";
 
 const OrderManagementContainer = () => {
   const [showNewOrder, setShowNewOrder] = useState(false);
@@ -32,5 +32,5 @@ const OrderManagementContainer = () => {
   );
 };
 
-export { OrderManagementContainer };
+export default OrderManagementContainer;
 

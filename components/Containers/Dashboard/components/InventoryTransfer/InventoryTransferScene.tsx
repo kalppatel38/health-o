@@ -145,5 +145,5 @@ const InventoryTransferScene = (props: InventoryTransferSceneProps) => {
   );
 };
 
-export { InventoryTransferScene };
+export default InventoryTransferScene;
 

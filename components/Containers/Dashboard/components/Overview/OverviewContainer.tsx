@@ -6,7 +6,7 @@ import {
   headquartersInventoryItems,
   lowStockItems,
 } from "../../data/dashboard-overview";
-import { OverviewScene } from "./OverviewScene";
+import OverviewScene from "./OverviewScene";
 
 const OverviewContainer = () => {
   return (
@@ -19,5 +19,5 @@ const OverviewContainer = () => {
   );
 };
 
-export { OverviewContainer };
+export default OverviewContainer;
 

@@ -569,5 +569,5 @@ const ReportsScene = (props: ReportsSceneProps) => {
   );
 };
 
-export { ReportsScene };
+export default ReportsScene;
 

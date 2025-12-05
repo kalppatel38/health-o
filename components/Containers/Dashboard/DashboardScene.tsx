@@ -11,4 +11,4 @@ const DashboardScene = (props: DashboardSceneProps) => {
   return <div>{children}</div>;
 };
 
-export { DashboardScene };
+export default DashboardScene;

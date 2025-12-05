@@ -36,5 +36,5 @@ const LogoutContainer = () => {
   return null;
 };
 
-export { LogoutContainer };
+export default LogoutContainer;
 

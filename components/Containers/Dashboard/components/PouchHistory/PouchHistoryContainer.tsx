@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   POUCH_REPORTS,
 } from "../../data/pouch-history";
-import { PouchHistoryScene } from "./PouchHistoryScene";
+import PouchHistoryScene from "./PouchHistoryScene";
 
 const PouchHistoryContainer = () => {
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
@@ -18,5 +18,5 @@ const PouchHistoryContainer = () => {
   );
 };
 
-export { PouchHistoryContainer };
+export default PouchHistoryContainer;
 

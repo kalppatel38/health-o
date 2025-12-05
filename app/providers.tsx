@@ -12,7 +12,7 @@ interface AppProvidersProps {
   children: ReactNode;
 }
 
-export function AppProviders({ children }: AppProvidersProps) {
+const AppProviders = ({ children }: AppProvidersProps) => {
   return (
     <CookiesProvider>
       <ReduxProvider>
@@ -41,7 +41,9 @@ export function AppProviders({ children }: AppProvidersProps) {
       </ReduxProvider>
     </CookiesProvider>
   );
-}
+};
+
+export default AppProviders;
 
 
 

@@ -381,6 +381,6 @@ const IncidentsScene = (props: IncidentsSceneProps) => {
   );
 };
 
-export { IncidentsScene };
+export default IncidentsScene;
 
 

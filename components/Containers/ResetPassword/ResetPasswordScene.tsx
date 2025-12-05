@@ -106,5 +106,5 @@ const ResetPasswordScene = (props: ResetPasswordSceneProps) => {
   );
 };
 
-export { ResetPasswordScene };
+export default ResetPasswordScene;
 

@@ -4,7 +4,7 @@ import {
   POUCH_STATS,
   POUCHES,
 } from "../../data/live-pouch-status";
-import { LivePouchStatusScene } from "./LivePouchStatusScene";
+import LivePouchStatusScene from "./LivePouchStatusScene";
 
 const LivePouchStatusContainer = () => {
   return (
@@ -15,5 +15,5 @@ const LivePouchStatusContainer = () => {
   );
 };
 
-export { LivePouchStatusContainer };
+export default LivePouchStatusContainer;
 

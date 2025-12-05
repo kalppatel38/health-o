@@ -1,6 +1,8 @@
-import { DashboardContainer } from "@/components/Containers/Dashboard/DashboardContainer";
+import DashboardContainer from "@/components/Containers/Dashboard/DashboardContainer";
 
-export default function DashboardPage() {
+const DashboardPage = () => {
   return <DashboardContainer />;
-}
+};
+
+export default DashboardPage;
 

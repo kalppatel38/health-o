@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 import { resetPasswordAPI } from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/src/libs/constants";
-import { ResetPasswordScene } from "./ResetPasswordScene";
+import ResetPasswordScene from "./ResetPasswordScene";
 
 const ResetPasswordContainer = () => {
   const router = useRouter();
@@ -103,5 +103,5 @@ const ResetPasswordContainer = () => {
   );
 };
 
-export { ResetPasswordContainer };
+export default ResetPasswordContainer;
 

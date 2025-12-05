@@ -31,7 +31,7 @@ import type { AppDispatch, RootState } from "@/src/redux/store";
 import { ERRORS } from "@/src/libs/constants";
 import { loginSchema } from "@/src/libs/validators";
 import useLoginStatus from "@/src/libs/useLoginStatus";
-import { LoginScene } from "./LoginScene";
+import LoginScene from "./LoginScene";
 
 interface LoginFormData {
   email: string;
@@ -60,7 +60,7 @@ const LoginContainer = () => {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [otpSubmitted, setOtpSubmitted] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [otpReference, setOtpReference] = useState<string | null>(null);
 
@@ -326,4 +326,4 @@ const LoginContainer = () => {
   );
 };
 
-export { LoginContainer };
+export default LoginContainer;

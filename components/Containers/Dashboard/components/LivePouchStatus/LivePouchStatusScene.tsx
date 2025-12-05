@@ -234,6 +234,6 @@ const LivePouchStatusScene = (props: LivePouchStatusSceneProps) => {
   );
 };
 
-export { LivePouchStatusScene };
+export default LivePouchStatusScene;
 
 

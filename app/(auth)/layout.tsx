@@ -6,7 +6,7 @@ type AuthLayoutProps = {
   children: ReactNode;
 };
 
-export default function AuthLayout({ children }: AuthLayoutProps) {
+const AuthLayout = ({ children }: AuthLayoutProps) => {
   const year = new Date().getFullYear();
 
   return (
@@ -16,6 +16,8 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       </main>
     </div>
   );
-}
+};
+
+export default AuthLayout;
 
 

@@ -275,5 +275,5 @@ const NotificationRow = ({ item }: NotificationRowProps) => {
   );
 };
 
-export { NotificationsCenterScene };
+export default NotificationsCenterScene;
 

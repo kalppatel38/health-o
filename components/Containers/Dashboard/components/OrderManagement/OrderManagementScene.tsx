@@ -394,6 +394,6 @@ const OrderManagementScene = (props: OrderManagementSceneProps) => {
   );
 };
 
-export { OrderManagementScene };
+export default OrderManagementScene;
 
 

@@ -244,6 +244,6 @@ const PouchHistoryScene = (props: PouchHistorySceneProps) => {
   );
 };
 
-export { PouchHistoryScene };
+export default PouchHistoryScene;
 
 

@@ -1,4 +1,4 @@
-import { LogoutContainer } from "@/components/Containers/Logout/LogoutContainer";
+import LogoutContainer from "@/components/Containers/Logout/LogoutContainer";
 
 const LogoutPage = () => {
   return <LogoutContainer />;

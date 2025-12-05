@@ -348,5 +348,5 @@ const ActivityRow = ({ color, title, description, ago }: ActivityRowProps) => {
   );
 };
 
-export { OverviewScene };
+export default OverviewScene;
 

@@ -5,7 +5,7 @@ import {
   INCIDENT_STATS,
   INCIDENTS,
 } from "../../data/incidents";
-import { IncidentsScene } from "./IncidentsScene";
+import IncidentsScene from "./IncidentsScene";
 
 const IncidentsContainer = () => {
   const [showReportIncident, setShowReportIncident] = useState(false);
@@ -23,5 +23,5 @@ const IncidentsContainer = () => {
   );
 };
 
-export { IncidentsContainer };
+export default IncidentsContainer;
 

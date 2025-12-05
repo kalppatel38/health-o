@@ -2,15 +2,15 @@
 
 import { ReactNode } from "react";
 
-import { DashboardSidebar } from "@/components/Containers/Dashboard/components/Sidebar";
-import { DashboardHeader } from "@/components/Containers/Dashboard/components/Header";
+import DashboardSidebar from "@/components/Containers/Dashboard/components/Sidebar";
+import DashboardHeader from "@/components/Containers/Dashboard/components/Header";
 import { DashboardProvider } from "@/components/Containers/Dashboard/context/DashboardContext";
 
 type DashboardLayoutProps = {
   children: ReactNode;
 };
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <DashboardProvider>
       <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
@@ -22,5 +22,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
     </DashboardProvider>
   );
-}
+};
+export default DashboardLayout;
 

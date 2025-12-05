@@ -7,7 +7,7 @@ import {
   QUICK_REPORT_TEMPLATES,
   type ReportType,
 } from "../../data/reports";
-import { ReportsScene } from "./ReportsScene";
+import ReportsScene from "./ReportsScene";
 
 const ReportsContainer = () => {
   const [activeTab, setActiveTab] = useState<ReportType>("medication");
@@ -37,5 +37,5 @@ const ReportsContainer = () => {
   );
 };
 
-export { ReportsContainer };
+export default ReportsContainer;
 

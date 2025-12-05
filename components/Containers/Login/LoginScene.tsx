@@ -231,4 +231,4 @@ const LoginScene = (props: LoginSceneProps) => {
   );
 };
 
-export { LoginScene };
+export default LoginScene;

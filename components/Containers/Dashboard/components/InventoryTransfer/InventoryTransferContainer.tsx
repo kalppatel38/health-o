@@ -5,7 +5,7 @@ import {
   RECENT_TRANSFERS,
   TRANSFER_STATUS_CONFIG,
 } from "../../data/inventory-transfer";
-import { InventoryTransferScene } from "./InventoryTransferScene";
+import InventoryTransferScene from "./InventoryTransferScene";
 
 const InventoryTransferContainer = () => {
   return (
@@ -17,5 +17,5 @@ const InventoryTransferContainer = () => {
   );
 };
 
-export { InventoryTransferContainer };
+export default InventoryTransferContainer;
 
