@@ -15,7 +15,7 @@ import {
   DashboardSectionId,
 } from "../context/DashboardContext";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/src/libs/utils";
 
 const navItems: { id: DashboardSectionId; label: string; icon: any }[] = [
   {

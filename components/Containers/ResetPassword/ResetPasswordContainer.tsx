@@ -7,7 +7,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 
 import { resetPasswordAPI } from "@/src/redux/services/auth.api";
-import { ERRORS } from "@/lib/constants";
+import { ERRORS } from "@/src/libs/constants";
 import { ResetPasswordScene } from "./ResetPasswordScene";
 
 const ResetPasswordContainer = () => {

@@ -28,7 +28,7 @@ import {
   otpVerificationAPI,
 } from "@/src/redux/services/auth.api";
 import type { AppDispatch, RootState } from "@/src/redux/store";
-import { ERRORS } from "@/lib/constants";
+import { ERRORS } from "@/src/libs/constants";
 import { loginSchema } from "@/src/libs/validators";
 import useLoginStatus from "@/src/libs/useLoginStatus";
 import { LoginScene } from "./LoginScene";

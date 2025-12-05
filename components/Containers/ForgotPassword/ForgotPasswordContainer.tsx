@@ -6,7 +6,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
 
 import { forgotPasswordAPI } from "@/src/redux/services/auth.api";
-import { ERRORS } from "@/lib/constants";
+import { ERRORS } from "@/src/libs/constants";
 import { ForgotPasswordScene } from "./ForgotPasswordScene";
 
 const ForgotPasswordContainer = () => {
