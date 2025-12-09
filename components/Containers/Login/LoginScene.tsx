@@ -4,7 +4,7 @@ import type { FormEvent } from "react";
 import { Package, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Control, FieldErrors } from "react-hook-form";
+import type { Control } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,18 +31,14 @@ interface LoginSceneProps {
   control: Control<LoginFormData>;
   showPassword: boolean;
   status: "idle" | "loading" | "success" | "error";
-  error: string | null;
-  role: string | null;
   isSubmitDisabled: boolean;
   onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   setIsShowPassword: (show: boolean) => void;
-  formErrors: FieldErrors<LoginFormData>;
 
   // OTP-related props for inline verification flow
   isVerificationPage: boolean;
   otp: string;
   otpError: string | null;
-  otpSubmitted: boolean;
   rememberMe: boolean;
   isOtpLoading: boolean;
   isOtpSubmitDisabled: boolean;
@@ -58,16 +54,12 @@ const LoginScene = (props: LoginSceneProps) => {
     control,
     showPassword,
     status,
-    error,
-    role,
     isSubmitDisabled,
     onSubmit,
     setIsShowPassword,
-    formErrors,
     isVerificationPage,
     otp,
     otpError,
-    otpSubmitted,
     rememberMe,
     isOtpLoading,
     isOtpSubmitDisabled,

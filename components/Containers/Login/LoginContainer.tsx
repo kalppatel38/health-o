@@ -12,7 +12,6 @@ import {
   loginStarted,
   loginSuccess,
   loginFail,
-  loginReset,
   fetchLoginUserSuccess,
 } from "@/src/redux/slices/auth";
 import {
@@ -37,8 +36,6 @@ const LoginContainer = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { login, loginUser } = useSelector((state: RootState) => state.auth);
   const status = login.isLoading ? "loading" : login.error ? "error" : loginUser.isLogin ? "success" : "idle";
-  const error = login.error;
-  const role = loginUser.data?.role || loginUser.data?.user?.userType || null;
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   // Mirror svastha: useLoginStatus hook watches loginUser state and sets cookie
@@ -50,7 +47,6 @@ const LoginContainer = () => {
   const [isVerificationPage, setIsVerificationPage] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
-  const [otpSubmitted, setOtpSubmitted] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [otpReference, setOtpReference] = useState<string | null>(null);
@@ -99,7 +95,6 @@ const LoginContainer = () => {
         setOtpReference(String(loginResponse.otpReference));
         setOtp("");
         setOtpError(null);
-        setOtpSubmitted(false);
         setResendSecondsLeft(60);
         return;
       }
@@ -166,14 +161,12 @@ const LoginContainer = () => {
 
     if (!/^\d{6}$/.test(otp)) {
       setOtpError("Please enter the 6-digit one-time passcode.");
-      setOtpSubmitted(false);
       setIsOtpLoading(false);
       return;
     }
 
     if (!otpReference) {
       setOtpError("Missing verification reference. Please start sign in again.");
-      setOtpSubmitted(false);
       setIsOtpLoading(false);
       return;
     }
@@ -183,7 +176,6 @@ const LoginContainer = () => {
       if (!executeRecaptcha) {
         toast.error(ERRORS.recaptcha.notAvailabale);
         setOtpError(ERRORS.recaptcha.notAvailabale);
-        setOtpSubmitted(false);
         setIsOtpLoading(false);
         return;
       }
@@ -216,7 +208,6 @@ const LoginContainer = () => {
         }
 
         setOtpError(null);
-        setOtpSubmitted(true);
         setIsOtpLoading(false);
 
         setTimeout(() => {
@@ -225,12 +216,10 @@ const LoginContainer = () => {
         return;
       }
 
-      setOtpSubmitted(false);
       setIsOtpLoading(false);
       setOtpError(ERRORS.auth.verificationCode);
       toast.error(ERRORS.auth.verificationCode);
     } catch (err: any) {
-      setOtpSubmitted(false);
       setIsOtpLoading(false);
       const message = err?.message ?? ERRORS.auth.verificationCode;
       setOtpError(message);
@@ -261,7 +250,6 @@ const LoginContainer = () => {
         setOtpReference(String(res.otpReference));
         setOtp("");
         setOtpError(null);
-        setOtpSubmitted(false);
         setResendSecondsLeft(60);
       }
     } catch (err: any) {
@@ -280,16 +268,12 @@ const LoginContainer = () => {
       control={control}
       showPassword={showPassword}
       status={status}
-      error={error}
-      role={role}
       isSubmitDisabled={isSubmitDisabled}
       onSubmit={handleFormSubmit(onSubmit)}
       setIsShowPassword={setShowPassword}
-      formErrors={errors}
       isVerificationPage={isVerificationPage}
       otp={otp}
       otpError={otpError}
-      otpSubmitted={otpSubmitted}
       rememberMe={rememberMe}
       isOtpLoading={isOtpLoading}
       isOtpSubmitDisabled={isOtpSubmitDisabled}
