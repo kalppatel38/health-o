@@ -1,11 +1,6 @@
 "use client";
 
-import type {
-  ClipboardEvent,
-  ChangeEvent,
-  FormEvent,
-  KeyboardEvent,
-} from "react";
+import type { FormEvent } from "react";
 import { Package, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -25,6 +20,7 @@ import {
   InputFieldOnly,
   PasswordField,
 } from "@/src/component/FormFields/FormFieldsComponent";
+import OtpInput from "react-otp-input";
 
 interface LoginFormData {
   email: string;
@@ -44,22 +40,17 @@ interface LoginSceneProps {
 
   // OTP-related props for inline verification flow
   isVerificationPage: boolean;
-  digits: string[];
+  otp: string;
   otpError: string | null;
   otpSubmitted: boolean;
   rememberMe: boolean;
   isOtpLoading: boolean;
   isOtpSubmitDisabled: boolean;
-  handleDigitChange: (
-    index: number
-  ) => (event: ChangeEvent<HTMLInputElement>) => void;
-  handleKeyDown: (
-    index: number
-  ) => (event: KeyboardEvent<HTMLInputElement>) => void;
-  handlePaste: (event: ClipboardEvent<HTMLInputElement>) => void;
+  onOtpChange: (value: string) => void;
   handleOtpSubmit: (event: FormEvent<HTMLFormElement>) => void;
   setRememberMe: (value: boolean) => void;
-  inputRefs: React.MutableRefObject<Array<HTMLInputElement | null>>;
+  resendSecondsLeft: number;
+  onResendOtp: () => void;
 }
 
 const LoginScene = (props: LoginSceneProps) => {
@@ -74,18 +65,17 @@ const LoginScene = (props: LoginSceneProps) => {
     setIsShowPassword,
     formErrors,
     isVerificationPage,
-    digits,
+    otp,
     otpError,
     otpSubmitted,
     rememberMe,
     isOtpLoading,
     isOtpSubmitDisabled,
-    handleDigitChange,
-    handleKeyDown,
-    handlePaste,
+    onOtpChange,
     handleOtpSubmit,
     setRememberMe,
-    inputRefs,
+    resendSecondsLeft,
+    onResendOtp,
   } = props;
 
   const router = useRouter();
@@ -161,27 +151,21 @@ const LoginScene = (props: LoginSceneProps) => {
           <CardContent className="space-y-8 pt-2">
             <form className="space-y-8" onSubmit={handleOtpSubmit}>
               <div className="space-y-4 pt-4">
-                <div className="flex items-center justify-center gap-3 sm:gap-4">
-                  {digits.map((digit, index) => (
+                <OtpInput
+                  value={otp}
+                  onChange={onOtpChange}
+                  numInputs={6}
+                  inputType="tel"
+                  renderInput={(inputProps) => (
                     <Input
-                      key={index}
-                      id={`otp-digit-${index}`}
-                      name={`otp-digit-${index}`}
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      maxLength={1}
-                      value={digit}
-                      onChange={handleDigitChange(index)}
-                      onKeyDown={handleKeyDown(index)}
-                      onPaste={handlePaste}
-                      ref={(el) => {
-                        inputRefs.current[index] = el;
-                      }}
-                      className="h-14 w-12 rounded-xl text-center text-xl font-semibold sm:h-14 sm:w-14"
-                      autoComplete={index === 0 ? "one-time-code" : "off"}
+                      {...inputProps}
+                      className="h-14 w-12 border-2 rounded-2xl bg-white text-center text-xl font-semibold text-black outline-none ring-0 transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500 placeholder:text-neutral-400 sm:h-14 sm:w-14"
+                      style={{ color: '#000' }}
                     />
-                  ))}
-                </div>
+                  )}
+                  shouldAutoFocus
+                  containerStyle="flex items-center justify-center gap-3 sm:gap-4"
+                />
                 <p className="text-center text-sm text-neutral-500">
                   Enter the 6-digit code we sent you.
                 </p>
@@ -197,6 +181,20 @@ const LoginScene = (props: LoginSceneProps) => {
                   />
                   <span>Keep me signed in on this device for 30 days.</span>
                 </label>
+                <p className="mt-3 text-center text-xs text-neutral-500">
+                  Didn&apos;t receive the code?{" "}
+                  {resendSecondsLeft > 0 ? (
+                    <span>Resend available in {resendSecondsLeft}s.</span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={onResendOtp}
+                      className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+                    >
+                      Resend code
+                    </button>
+                  )}
+                </p>
               </div>
 
               <Button

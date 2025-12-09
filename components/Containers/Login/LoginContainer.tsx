@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useRef,
-  type FormEvent,
-  type ChangeEvent,
-  type KeyboardEvent,
-  type ClipboardEvent,
-} from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -26,6 +19,7 @@ import {
   loginAPI,
   getLoginUser,
   otpVerificationAPI,
+  resendOtpAPI,
 } from "@/src/redux/services/auth.api";
 import type { AppDispatch, RootState } from "@/src/redux/store";
 import { ERRORS } from "@/src/libs/constants";
@@ -37,8 +31,6 @@ interface LoginFormData {
   email: string;
   password: string;
 }
-
-const DIGIT_COUNT = 6;
 
 const LoginContainer = () => {
   const router = useRouter();
@@ -56,13 +48,13 @@ const LoginContainer = () => {
 
   // Local OTP flow state (mirroring behaviour from OtpContainer / svastha)
   const [isVerificationPage, setIsVerificationPage] = useState(false);
-  const [digits, setDigits] = useState<string[]>(Array(DIGIT_COUNT).fill(""));
-  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [otp, setOtp] = useState("");
   const [otpError, setOtpError] = useState<string | null>(null);
   const [otpSubmitted, setOtpSubmitted] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [otpReference, setOtpReference] = useState<string | null>(null);
+  const [resendSecondsLeft, setResendSecondsLeft] = useState(60);
 
   // Setup react-hook-form with yup validation (matching svastha pattern)
   const {
@@ -105,9 +97,10 @@ const LoginContainer = () => {
       if (loginResponse.otpReference) {
         setIsVerificationPage(true);
         setOtpReference(String(loginResponse.otpReference));
-        setDigits(Array(DIGIT_COUNT).fill(""));
+        setOtp("");
         setOtpError(null);
         setOtpSubmitted(false);
+        setResendSecondsLeft(60);
         return;
       }
 
@@ -145,82 +138,32 @@ const LoginContainer = () => {
 
   const isSubmitDisabled = isSubmitting || login.isLoading;
 
-  // OTP handlers (lifted from OtpContainer so flow is inline here)
-  const handleDigitChange =
-    (index: number) =>
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value.replace(/\D/g, "").slice(-1);
-
-      setDigits((prev) => {
-        const next = [...prev];
-        next[index] = value;
-        return next;
-      });
-
-      if (value && index < DIGIT_COUNT - 1) {
-        inputRefs.current[index + 1]?.focus();
-      }
-
-      if (otpError) {
-        setOtpError(null);
-      }
-      if (otpSubmitted) {
-        setOtpSubmitted(false);
-      }
-    };
-
-  const handleKeyDown =
-    (index: number) =>
-    (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Backspace") {
-        if (digits[index]) {
-          setDigits((prev) => {
-            const next = [...prev];
-            next[index] = "";
-            return next;
-          });
-        } else if (index > 0) {
-          inputRefs.current[index - 1]?.focus();
-        }
-      }
-
-      if (event.key === "ArrowLeft" && index > 0) {
-        inputRefs.current[index - 1]?.focus();
-      }
-
-      if (event.key === "ArrowRight" && index < DIGIT_COUNT - 1) {
-        inputRefs.current[index + 1]?.focus();
-      }
-    };
-
-  const handlePaste = (event: ClipboardEvent<HTMLInputElement>) => {
-    event.preventDefault();
-    const text = event.clipboardData.getData("text").replace(/\D/g, "");
-    if (!text) {
+  // Countdown timer for enabling "Resend code"
+  useEffect(() => {
+    if (!isVerificationPage) {
       return;
     }
 
-    const nextDigits = Array(DIGIT_COUNT)
-      .fill("")
-      .map((_, idx) => text[idx] ?? "");
-    setDigits(nextDigits);
-
-    const filledCount = nextDigits.findIndex((digit) => digit === "");
-    const focusIndex = filledCount === -1 ? DIGIT_COUNT - 1 : filledCount;
-    inputRefs.current[focusIndex]?.focus();
-
-    if (otpError) {
-      setOtpError(null);
+    if (resendSecondsLeft <= 0) {
+      return;
     }
-    if (otpSubmitted) {
-      setOtpSubmitted(false);
-    }
-  };
+
+    const timer = window.setInterval(() => {
+      setResendSecondsLeft((prev) => {
+        if (prev <= 1) {
+          window.clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [isVerificationPage, resendSecondsLeft]);
 
   const handleOtpSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const otp = digits.join("");
     if (!/^\d{6}$/.test(otp)) {
       setOtpError("Please enter the 6-digit one-time passcode.");
       setOtpSubmitted(false);
@@ -295,8 +238,42 @@ const LoginContainer = () => {
     }
   };
 
-  const isOtpSubmitDisabled =
-    digits.some((digit) => digit.trim().length === 0) || isOtpLoading;
+  const handleResendOtp = async () => {
+    if (resendSecondsLeft > 0 || isOtpLoading) {
+      return;
+    }
+
+    try {
+      const userId = login.data?.user?.id;
+      if (!userId || !otpReference) {
+        toast.error("Missing information to resend the code. Please sign in again.");
+        return;
+      }
+
+      setIsOtpLoading(true);
+
+      const res = await resendOtpAPI({
+        userId,
+        otpReference,
+      });
+
+      if (res?.otpReference) {
+        setOtpReference(String(res.otpReference));
+        setOtp("");
+        setOtpError(null);
+        setOtpSubmitted(false);
+        setResendSecondsLeft(60);
+      }
+    } catch (err: any) {
+      const message =
+        err?.message ?? "Unable to resend the code right now. Please try again.";
+      toast.error(message);
+    } finally {
+      setIsOtpLoading(false);
+    }
+  };
+
+  const isOtpSubmitDisabled = otp.trim().length !== 6 || isOtpLoading;
 
   return (
     <LoginScene
@@ -310,18 +287,17 @@ const LoginContainer = () => {
       setIsShowPassword={setShowPassword}
       formErrors={errors}
       isVerificationPage={isVerificationPage}
-      digits={digits}
+      otp={otp}
       otpError={otpError}
       otpSubmitted={otpSubmitted}
       rememberMe={rememberMe}
       isOtpLoading={isOtpLoading}
       isOtpSubmitDisabled={isOtpSubmitDisabled}
-      handleDigitChange={handleDigitChange}
-      handleKeyDown={handleKeyDown}
-      handlePaste={handlePaste}
+      onOtpChange={setOtp}
       handleOtpSubmit={handleOtpSubmit}
       setRememberMe={setRememberMe}
-      inputRefs={inputRefs}
+      resendSecondsLeft={resendSecondsLeft}
+      onResendOtp={handleResendOtp}
     />
   );
 };
