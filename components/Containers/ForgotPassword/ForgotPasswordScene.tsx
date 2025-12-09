@@ -1,8 +1,9 @@
 "use client";
 
-import type { FormEvent, ChangeEvent } from "react";
-import { Package } from "lucide-react";
+import type { FormEvent } from "react";
+import { Package, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { Control } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,20 +14,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { InputFieldOnly } from "@/src/component/FormFields/FormFieldsComponent";
+import { ForgotPasswordFormInputs } from "@/src/schemas/forgotPasswordSchema";
 
 interface ForgotPasswordSceneProps {
-  email: string;
+  control: Control<ForgotPasswordFormInputs>;
   submitted: boolean;
   error: string | null;
   isSubmitDisabled: boolean;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 const ForgotPasswordScene = (props: ForgotPasswordSceneProps) => {
-  const { email, submitted, error, isSubmitDisabled, handleChange, handleSubmit } = props;
+  const { control, submitted, error, isSubmitDisabled, onSubmit } = props;
   const router = useRouter();
 
   return (
@@ -42,20 +42,16 @@ const ForgotPasswordScene = (props: ForgotPasswordSceneProps) => {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={handleChange}
-              autoComplete="email"
-              required
-            />
-          </div>
+        <form className="space-y-6" onSubmit={onSubmit}>
+          <InputFieldOnly
+            name="email"
+            control={control}
+            label="Email address"
+            placeholder="you@example.com"
+            id="email"
+            type="email"
+            autoComplete="email"
+          />
 
           {error && (
             <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{error}</p>
@@ -68,7 +64,14 @@ const ForgotPasswordScene = (props: ForgotPasswordSceneProps) => {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            Send reset link
+            {isSubmitDisabled ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send reset link"
+            )}
           </Button>
         </form>
       </CardContent>

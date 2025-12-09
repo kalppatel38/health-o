@@ -1,23 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import type { FormEvent, ChangeEvent } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { forgotPasswordAPI } from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/src/libs/constants";
+import { ForgotPasswordFormInputs, ForgotPasswordFormValidateSchema } from "@/src/schemas/forgotPasswordSchema";
 import { ForgotPasswordScene } from "./ForgotPasswordScene";
 
 const ForgotPasswordContainer = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // Setup react-hook-form with yup validation
+  const {
+    control,
+    handleSubmit: handleFormSubmit,
+    formState: { isSubmitting },
+  } = useForm<ForgotPasswordFormInputs>({
+    resolver: yupResolver(ForgotPasswordFormValidateSchema),
+    defaultValues: {
+      email: "",
+    },
+    mode: "onBlur", // Validate on blur
+    reValidateMode: "onBlur", // Re-validate on blur
+  });
 
+  const onSubmit = async (data: ForgotPasswordFormInputs) => {
     try {
       if (!executeRecaptcha) {
         toast.error(ERRORS.recaptcha.notAvailabale);
@@ -28,7 +41,7 @@ const ForgotPasswordContainer = () => {
 
       const gReCaptchaToken = await executeRecaptcha("ForgotPasswordFormSubmit");
 
-      await forgotPasswordAPI({ email, gReCaptchaToken });
+      await forgotPasswordAPI({ email: data.email, gReCaptchaToken });
       setError(null);
       setSubmitted(true);
       toast.success(
@@ -44,22 +57,15 @@ const ForgotPasswordContainer = () => {
     }
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-    if (submitted) setSubmitted(false);
-    if (error) setError(null);
-  };
-
-  const isSubmitDisabled = email.trim().length === 0;
+  const isSubmitDisabled = isSubmitting;
 
   return (
     <ForgotPasswordScene
-      email={email}
+      control={control}
       submitted={submitted}
       error={error}
       isSubmitDisabled={isSubmitDisabled}
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
+      onSubmit={handleFormSubmit(onSubmit)}
     />
   );
 };

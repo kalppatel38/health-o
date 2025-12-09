@@ -22,14 +22,9 @@ import {
 } from "@/src/redux/services/auth.api";
 import type { AppDispatch, RootState } from "@/src/redux/store";
 import { ERRORS } from "@/src/libs/constants";
-import { loginSchema } from "@/src/libs/validators";
+import { LoginFormInputs, LoginFormValidateSchema } from "@/src/schemas/loginSchema";
 import useLoginStatus from "@/src/libs/useLoginStatus";
 import LoginScene from "./LoginScene";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
 
 const LoginContainer = () => {
   const router = useRouter();
@@ -52,22 +47,22 @@ const LoginContainer = () => {
   const [otpReference, setOtpReference] = useState<string | null>(null);
   const [resendSecondsLeft, setResendSecondsLeft] = useState(60);
 
-  // Setup react-hook-form with yup validation (matching svastha pattern)
+  // Setup react-hook-form with yup validation
   const {
     control,
     handleSubmit: handleFormSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: yupResolver(loginSchema),
+    formState: { isSubmitting },
+  } = useForm<LoginFormInputs>({
+    resolver: yupResolver(LoginFormValidateSchema),
     defaultValues: {
       email: "",
       password: "",
     },
-    mode: "onBlur", // Validate on blur like svastha
+    mode: "onBlur", // Validate on blur
     reValidateMode: "onBlur", // Re-validate on blur
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormInputs) => {
     dispatch(loginStarted());
 
     try {

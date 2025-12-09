@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import type { FormEvent, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { resetPasswordAPI } from "@/src/redux/services/auth.api";
 import { ERRORS } from "@/src/libs/constants";
+import { ResetPasswordFormInputs, ResetPasswordFormValidateSchema } from "@/src/schemas/resetPasswordSchema";
 import ResetPasswordScene from "./ResetPasswordScene";
 
 const ResetPasswordContainer = () => {
@@ -16,27 +18,35 @@ const ResetPasswordContainer = () => {
   const token = searchParams.get("token");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  const [form, setForm] = useState({
-    password: "",
-    confirmPassword: "",
-  });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // Setup react-hook-form with yup validation
+  const {
+    control,
+    handleSubmit: handleFormSubmit,
+    formState: { isSubmitting },
+    setValue,
+  } = useForm<ResetPasswordFormInputs>({
+    resolver: yupResolver(ResetPasswordFormValidateSchema),
+    defaultValues: {
+      newPassword: "",
+      confirmPassword: "",
+      invitationToken: token || "",
+    },
+    mode: "onBlur", // Validate on blur
+    reValidateMode: "onBlur", // Re-validate on blur
+  });
 
-    if (form.password.trim().length < 8) {
-      setError("Password must be at least 8 characters long.");
-      return;
+  // Update invitationToken when token changes
+  useEffect(() => {
+    if (token) {
+      setValue("invitationToken", token);
     }
+  }, [token, setValue]);
 
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    if (!token) {
+  const onSubmit = async (data: ResetPasswordFormInputs) => {
+    if (!data.invitationToken) {
       const message = ERRORS.auth.emailToken;
       setError(message);
       toast.error(message);
@@ -51,12 +61,12 @@ const ResetPasswordContainer = () => {
         return;
       }
 
-      const gReCaptchaToken = await executeRecaptcha("ForgotPasswordFormSubmit");
+      const gReCaptchaToken = await executeRecaptcha("ResetPasswordFormSubmit");
 
       await resetPasswordAPI({
-        newPassword: form.password,
-        confirmPassword: form.password,
-        invitationToken: token,
+        newPassword: data.newPassword,
+        confirmPassword: data.newPassword,
+        invitationToken: data.invitationToken,
         gReCaptchaToken,
       });
 
@@ -76,28 +86,15 @@ const ResetPasswordContainer = () => {
     }
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (error) {
-      setError(null);
-    }
-    if (submitted) {
-      setSubmitted(false);
-    }
-  };
-
-  const isSubmitDisabled =
-    form.password.trim().length === 0 || form.confirmPassword.trim().length === 0;
+  const isSubmitDisabled = isSubmitting;
 
   return (
     <ResetPasswordScene
-      form={form}
+      control={control}
       submitted={submitted}
       error={error}
       isSubmitDisabled={isSubmitDisabled}
-      handleChange={handleChange}
-      handleSubmit={handleSubmit}
+      onSubmit={handleFormSubmit(onSubmit)}
       token={token}
     />
   );

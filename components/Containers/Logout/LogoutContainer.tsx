@@ -1,17 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCookies } from "react-cookie";
+import { useDispatch } from "react-redux";
 
 import { logoutAPI } from "@/src/redux/services/auth.api";
+import { fetchLoginUserReset, loginReset } from "@/src/redux/slices/auth";
+import type { AppDispatch } from "@/src/redux/store";
 
 const LogoutContainer = () => {
   const router = useRouter();
   const [cookies, , removeCookie] = useCookies(["auth"]);
-  const [status, setStatus] = useState<"running" | "done">("running");
+  const dispatch = useDispatch<AppDispatch>();
+  const hasLoggedOutRef = useRef(false);
 
   useEffect(() => {
+    if (hasLoggedOutRef.current) return;
+    hasLoggedOutRef.current = true;
+
     async function performLogout() {
       const auth = cookies.auth;
       const sessionId: string | undefined = auth?.session?.id;
@@ -25,13 +32,15 @@ const LogoutContainer = () => {
       } finally {
         // Clear auth cookie using react-cookie
         removeCookie("auth", { path: "/" });
-        setStatus("done");
+        // Reset auth state in Redux
+        dispatch(loginReset());
+        dispatch(fetchLoginUserReset());
         router.replace("/login");
       }
     }
 
     void performLogout();
-  }, [router, cookies.auth, removeCookie]);
+  }, [cookies.auth, dispatch, removeCookie, router]);
 
   return null;
 };

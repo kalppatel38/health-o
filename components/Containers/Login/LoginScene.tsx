@@ -21,18 +21,14 @@ import {
   PasswordField,
 } from "@/src/component/FormFields/FormFieldsComponent";
 import OtpInput from "react-otp-input";
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
+import { LoginFormInputs } from "@/src/schemas/loginSchema";
 
 interface LoginSceneProps {
-  control: Control<LoginFormData>;
+  control: Control<LoginFormInputs>;
   showPassword: boolean;
   status: "idle" | "loading" | "success" | "error";
   isSubmitDisabled: boolean;
-  onSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   setIsShowPassword: (show: boolean) => void;
 
   // OTP-related props for inline verification flow

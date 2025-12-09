@@ -1,8 +1,10 @@
 "use client";
 
-import type { FormEvent, ChangeEvent } from "react";
-import { Package } from "lucide-react";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Package, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { Control } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,26 +15,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PasswordField } from "@/src/component/FormFields/FormFieldsComponent";
+import { ResetPasswordFormInputs } from "@/src/schemas/resetPasswordSchema";
 
 interface ResetPasswordSceneProps {
-  form: {
-    password: string;
-    confirmPassword: string;
-  };
+  control: Control<ResetPasswordFormInputs>;
   submitted: boolean;
   error: string | null;
   isSubmitDisabled: boolean;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void;
   token: string | null;
 }
 
 const ResetPasswordScene = (props: ResetPasswordSceneProps) => {
-  const { form, submitted, error, isSubmitDisabled, handleChange, handleSubmit, token } =
-    props;
+  const { control, submitted, error, isSubmitDisabled, onSubmit, token } = props;
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <Card className="w-full max-w-md rounded-2xl border-none bg-white shadow-2xl shadow-blue-900/10">
@@ -49,33 +48,27 @@ const ResetPasswordScene = (props: ResetPasswordSceneProps) => {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-2">
-            <Label htmlFor="password">New password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Enter new password"
-              value={form.password}
-              onChange={handleChange}
-              autoComplete="new-password"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm password</Label>
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="Re-enter new password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              autoComplete="new-password"
-              required
-            />
-          </div>
+        <form className="space-y-6" onSubmit={onSubmit}>
+          <PasswordField
+            name="newPassword"
+            control={control}
+            label="New password"
+            placeholder="Enter new password"
+            id="newPassword"
+            autoComplete="new-password"
+            showPassword={showPassword}
+            onTogglePassword={() => setShowPassword(!showPassword)}
+          />
+          <PasswordField
+            name="confirmPassword"
+            control={control}
+            label="Confirm password"
+            placeholder="Re-enter new password"
+            id="confirmPassword"
+            autoComplete="new-password"
+            showPassword={showConfirmPassword}
+            onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+          />
 
           {error && (
             <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-700">{error}</p>
@@ -88,7 +81,14 @@ const ResetPasswordScene = (props: ResetPasswordSceneProps) => {
           )}
 
           <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            Update password
+            {isSubmitDisabled ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Updating...
+              </>
+            ) : (
+              "Update password"
+            )}
           </Button>
         </form>
       </CardContent>
